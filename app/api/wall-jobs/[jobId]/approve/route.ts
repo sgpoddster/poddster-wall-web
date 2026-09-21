@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getJob, approveJob } from '@/lib/wall-api';
+import { getJob, approveJob, type ConformRule } from '@/lib/wall-api';
+
+const SELECTABLE_RULES: ConformRule[] = ['fill', 'fit'];
 
 // The client's browser never calls wall-api directly (it doesn't have
 // INTERNAL_API_KEY). It calls this route, which re-validates the token
@@ -7,9 +9,12 @@ import { getJob, approveJob } from '@/lib/wall-api';
 // wall-api's own check, and lets us fail with a clean message instead of
 // forwarding wall-api's internal error shape to the browser.
 export async function POST(req: NextRequest, { params }: { params: { jobId: string } }) {
-  const { token } = await req.json().catch(() => ({ token: null }));
+  const { token, rule } = await req.json().catch(() => ({ token: null, rule: null }));
   if (!token) {
     return NextResponse.json({ error: 'token is required' }, { status: 400 });
+  }
+  if (rule && !SELECTABLE_RULES.includes(rule)) {
+    return NextResponse.json({ error: `rule must be one of ${SELECTABLE_RULES.join(', ')}` }, { status: 400 });
   }
 
   const job = await getJob(params.jobId, token);
@@ -20,6 +25,6 @@ export async function POST(req: NextRequest, { params }: { params: { jobId: stri
     return NextResponse.json({ error: `job isn't ready to approve (status: ${job.status})` }, { status: 409 });
   }
 
-  const result = await approveJob(params.jobId);
+  const result = await approveJob(params.jobId, rule ?? undefined);
   return NextResponse.json(result);
 }

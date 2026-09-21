@@ -13,8 +13,10 @@ app/
     JobView.tsx                client component: renders per job.status,
                                 polls /api/wall-jobs/[jobId] every 5s
                                 while the job is mid-pipeline (queued,
-                                probing, approved, conforming), handles
-                                the approve button
+                                probing, approved, conforming); at
+                                preview_ready, shows a fill/fit radio
+                                picker (defaulting to the job's existing
+                                rule) and sends the choice on approve
   api/wall-jobs/[jobId]/
     route.ts                   GET proxy to wall-api (keeps
                                 INTERNAL_API_KEY server-side)

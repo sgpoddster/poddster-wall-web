@@ -2,6 +2,26 @@
 
 Newest entry on top.
 
+## 2026-09-21 — Fill/fit picker on the preview page
+
+Ben asked why the client couldn't choose fill vs. fit — they couldn't;
+the rule was fixed at job creation, and the fill/fit side-by-side preview
+was purely informational. `JobView.tsx`'s `preview_ready` view now shows
+a radio picker (Fill / Fit, each with a one-line description of the
+tradeoff) defaulting to whatever rule the job already has, and the
+Approve button sends the selection. `plate` isn't offered — it's a
+deck/background-blur treatment, not a crop/pad choice for video.
+
+`lib/wall-api.ts`'s `approveJob` and the `/api/wall-jobs/[jobId]/approve`
+proxy both gained an optional `rule` param (validated client-side against
+`['fill','fit']` before it ever reaches `wall-api`, which does its own
+validation too). Paired with a `wall-api` change on the `poddster-wall`
+side — see that repo's changelog.
+
+Labeled the preview images "Fill on the left, Fit on the right" so the
+picker and the image the client is looking at actually correspond —
+the composite already put them in that order, it just wasn't stated.
+
 ## 2026-09-21 — Scaffold: the client-facing job page
 
 First commit. `/wall/[jobId]` reads the job via `wall-api`'s new

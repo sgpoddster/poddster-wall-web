@@ -48,10 +48,15 @@ export async function getJob(jobId: string, token: string): Promise<WallJob | nu
   return res.json();
 }
 
-export async function approveJob(jobId: string): Promise<{ status: string; approvedAt: string }> {
+export type ConformRule = 'fill' | 'fit' | 'plate';
+
+// `rule` lets the client change fill/fit at the point of approval — see
+// JobView.tsx. Omit it to approve whatever rule the job already has.
+export async function approveJob(jobId: string, rule?: ConformRule): Promise<{ status: string; approvedAt: string; rule: string }> {
   const res = await fetch(`${WALL_API_URL}/jobs/${jobId}/approve`, {
     method: 'POST',
     headers: headers(),
+    body: JSON.stringify(rule ? { rule } : {}),
   });
   if (!res.ok) throw new Error(`wall-api POST /jobs/${jobId}/approve failed: ${res.status} ${await res.text()}`);
   return res.json();
