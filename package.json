@@ -1,0 +1,23 @@
+{
+  "name": "poddster-wall-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client-facing /wall page for the Poddster LED wall pipeline (Stage 4). Talks to wall-api and Supabase; never touches GCP directly.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.0"
+  }
+}
