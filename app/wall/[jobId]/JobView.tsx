@@ -52,17 +52,33 @@ export default function JobView({ jobId, token, initialJob }: { jobId: string; t
       return <Status text="Your file is queued — this usually takes under a minute." />;
     case 'probing':
       return <Status text="Analysing your file…" />;
-    case 'preview_ready':
+    case 'preview_ready': {
+      const comparisonImages = job.previews.filter((p) => p.kind === 'comparison');
+      const stageImages = job.previews.filter((p) => p.kind === 'stage');
+      const selectedStageImage = stageImages.find((p) => p.rule === selectedRule);
+
       return (
         <div>
+          {selectedStageImage && (
+            <>
+              <p>On the wall, in the room, with <strong>{RULE_OPTIONS.find((o) => o.value === selectedRule)?.label}</strong>:</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={selectedStageImage.url}
+                alt={`In-situ mockup: ${selectedRule} on the wall`}
+                style={{ maxWidth: '100%', height: 'auto', margin: '16px 0' }}
+              />
+            </>
+          )}
+
           <p>
-            Here&apos;s how your content will look on the wall — each image shows{' '}
-            <strong>Fill</strong> on the left, <strong>Fit</strong> on the right:
+            Detail comparison — each image shows <strong>Fill</strong> on the left,{' '}
+            <strong>Fit</strong> on the right:
           </p>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', margin: '16px 0' }}>
-            {job.previewUrls.map((url) => (
+            {comparisonImages.map((p) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img key={url} src={url} alt="Wall preview: fill (left) vs fit (right)" style={{ maxWidth: '100%', height: 'auto' }} />
+              <img key={p.url} src={p.url} alt="Wall preview: fill (left) vs fit (right)" style={{ maxWidth: '100%', height: 'auto' }} />
             ))}
           </div>
 
@@ -89,6 +105,7 @@ export default function JobView({ jobId, token, initialJob }: { jobId: string; t
           {approveError && <p style={{ color: 'crimson' }}>{approveError}</p>}
         </div>
       );
+    }
     case 'approved':
       return <Status text="Approved — starting the final render." />;
     case 'conforming':

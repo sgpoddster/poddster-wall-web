@@ -17,6 +17,13 @@ function headers() {
   };
 }
 
+// `comparison`: the flat fill|fit side-by-side detail shot. `stage`: the
+// in-situ mockup for one rule (has `rule` set) — see poddster-wall's
+// src/lib/stage-composite.js and src/cloud/api-service.js's classifyPreview.
+export type PreviewImage =
+  | { url: string; kind: 'comparison' }
+  | { url: string; kind: 'stage'; rule: 'fill' | 'fit' | 'plate' };
+
 export type WallJob = {
   id: string;
   booking_id: string;
@@ -31,7 +38,7 @@ export type WallJob = {
   quoted_cents: number | null;
   approved_at: string | null;
   validated: Record<string, unknown> | null;
-  previewUrls: string[];
+  previews: PreviewImage[];
   masterUrl: string | null;
 };
 

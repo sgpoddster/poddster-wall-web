@@ -14,9 +14,12 @@ app/
                                 polls /api/wall-jobs/[jobId] every 5s
                                 while the job is mid-pipeline (queued,
                                 probing, approved, conforming); at
-                                preview_ready, shows a fill/fit radio
-                                picker (defaulting to the job's existing
-                                rule) and sends the choice on approve
+                                preview_ready, shows the in-situ stage
+                                mockup matching the selected rule, the
+                                flat fill/fit detail comparison, and a
+                                fill/fit radio picker (defaulting to the
+                                job's existing rule) that sends the
+                                choice on approve
   api/wall-jobs/[jobId]/
     route.ts                   GET proxy to wall-api (keeps
                                 INTERNAL_API_KEY server-side)

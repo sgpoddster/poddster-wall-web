@@ -71,3 +71,23 @@ Push to `master` → Vercel builds and deploys automatically, once the
 Vercel project has been linked to this repo (done once, manually, in the
 Vercel dashboard — this is the one step that doesn't happen from a
 terminal).
+
+## This repo is public
+
+Not the original choice — it's a workaround. The Vercel project sits on
+Ben's personal Hobby plan and is linked to his `bendraycottjones-arch`
+GitHub account, but the repo is owned by `sgpoddster` (a separate GitHub
+user); Hobby doesn't support any collaborator model on a private repo
+between those two accounts, so every push was silently blocked (GitHub
+showed "Deployment was blocked" on the commit status — check there first
+if a push doesn't show up on the live site). Made public 2026-09-22 as
+the free fix over paying for Pro. Consequence: **never commit real
+secrets here** — `INTERNAL_API_KEY` and Supabase keys are Vercel/Secret
+Manager env vars only, never files in this repo, and that has to stay
+true now that anyone can read the history.
+
+Publishing content publicly (visibility changes, and pushes to this repo
+now that it's public) needs the user's own action — Claude's safety
+tooling blocks both. If you're Claude working in this repo: don't try to
+route around that; make the change locally, then hand the user the exact
+`git commit`/`git push` to run themselves.

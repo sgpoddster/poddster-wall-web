@@ -2,6 +2,46 @@
 
 Newest entry on top.
 
+## 2026-09-22 — Show the in-situ stage mockup, tied to the fill/fit picker
+
+Ben asked why the preview page wasn't showing the content on the wall
+on stage — it wasn't; `wall-api`'s previews were flat wall-content
+comparisons only, no room context. Fixed on the `poddster-wall` side
+first (a real perspective-warp compositor, using a render of the space
+he supplied), which changed `GET /jobs/:id`'s response shape:
+`previewUrls: string[]` is now `previews: {url, kind, rule?}[]`.
+
+`JobView.tsx` now shows the in-situ mockup matching whichever rule is
+currently selected above the detail comparison — so toggling Fill/Fit
+visibly swaps which "on the wall" image is shown, not just which rule
+gets sent on approve. `lib/wall-api.ts`'s `WallJob` type updated to
+match (`PreviewImage` union: `comparison` or `stage` + `rule`).
+
+## 2026-09-22 — Fixed: Vercel auto-deploy was silently blocked, repo made public
+
+Ben noticed the fill/fit picker wasn't showing up on the live site and
+asked directly — checked, and it wasn't: the auto-deploy for `142ab7a`
+had failed with "Deployment was blocked." Root cause, found via GitHub's
+commit-status API: the Vercel project (on Ben's personal Hobby plan) is
+linked to his `bendraycottjones-arch` GitHub account, but this repo is
+owned by `sgpoddster` (a separate GitHub user, not an org) and was
+private — Vercel's Hobby plan doesn't support any collaborator model on
+private repos regardless of GitHub-side permissions. Confirmed that by
+adding `bendraycottjones-arch` as a GitHub collaborator first (accepted
+the invite) and testing — still blocked, so it wasn't a GitHub
+permission issue.
+
+Real options were pay for Vercel Pro or make the repo public — nothing
+sensitive was in the code or its history (checked before doing it:
+`INTERNAL_API_KEY`/`SUPABASE_SERVICE_ROLE_KEY` only ever exist as env
+vars in Vercel/Secret Manager, never committed). Ben chose public. Once
+that landed and Ben pushed a fresh commit himself (`726b019` — pushing to
+a now-public repo is itself a publish action, so that specific step
+needed to be his from here on), the deploy succeeded immediately.
+Verified the picker live on production with a real job, not just
+"deploy succeeded" — radio buttons, correct labels, "Approve (Fit)"
+button text, all present.
+
 ## 2026-09-21 — Fill/fit picker on the preview page
 
 Ben asked why the client couldn't choose fill vs. fit — they couldn't;
